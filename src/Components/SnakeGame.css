@@ -1,0 +1,106 @@
+.App {
+  text-align: center;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #633399;
+}
+
+h3 {
+  margin: auto;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  max-width: 500px;
+  background-image: linear-gradient(to right, #af40ff, #5b42f3 40%, #00ddeb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.game-board {
+  margin: auto;
+  position: relative;
+  width: calc(100vw - 20px);
+  height: calc(100vh - 20px);
+  /* border: 2px solid rgb(102, 51, 153); */
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  border-radius: 25%;
+}
+
+.snake {
+  border-radius: 30%;
+  background-color: rgb(0, 0, 0);
+}
+
+.food {
+  clip-path: circle(50% at 50% 50%);
+  background-color: rgb(255, 0, 0);
+}
+
+button {
+  align-items: center;
+  background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-family: Phantomsans, sans-serif;
+  font-size: 0.9rem;
+  padding: 7px 10px;
+  margin: 0.5rem;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  min-width: 110px;
+}
+
+button:active,
+button:hover {
+  outline: 0;
+}
+
+@media (max-width: 800px) {
+  .control {
+    transform: translate(50%, 140%);
+  }
+}
+
+.dialog {
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  color: #f8f8f8;
+  width: 200px;
+  height: 200px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgb(221, 203, 241);
+  z-index: 999;
+  transform: "translate(-50%, -50%)";
+}
+
+.reset {
+  margin-top: -10%;
+  z-index: 999;
+}
+
+.control {
+  position: fixed;
+  top: 20%;
+  left: 5%;
+}
