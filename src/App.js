@@ -24,7 +24,7 @@ function App() {
   const timer = useRef(null);
   const grid = useRef(Array(ROWs).fill(Array(COLs).fill("")));
   const snakeCoordinates = useRef([]);
-  const direction = useRef(RIGHT);
+  const direction = useRef(DOWN);
   const snakeCoordinatesMap = useRef(new Set());
   const foodCoords = useRef({
     row: -1,
@@ -184,6 +184,7 @@ function App() {
   };
 
   const startGame = async () => {
+    // window.ReactNativeWebView.postMessage("Hello from the website!");
     const interval = setInterval(() => {
       moveSnake();
     }, SPEED);
@@ -241,10 +242,10 @@ function App() {
       case "LEFT":
         handleDirectionChange("ArrowLeft")
         break;
-      case "FORWARD": // "FORWARD" can be interpreted as "UP"
+      case "FORWARD":
         handleDirectionChange("ArrowUp")
         break;
-      case "BACKWARD": // "BACKWARD" can be interpreted as "DOWN"
+      case "BACKWARD":
         handleDirectionChange("ArrowDown")
         break;
       default:
@@ -275,20 +276,6 @@ function App() {
       <p className="score">SCORE {points}</p>
       <div className="keys-container">
         <Joystick size={100} move={handleJoystickMove} ></Joystick>
-        {/* <button onClick={() => handleDirectionChange("ArrowUp")}>
-          UP
-        </button>
-        <div className="key-row">
-          <button onClick={() => handleDirectionChange("ArrowLeft")}>
-            LEFT
-          </button>
-          <button onClick={() => handleDirectionChange("ArrowRight")}>
-            RIGHT
-          </button>
-        </div>
-        <button onClick={() => handleDirectionChange("ArrowDown")}>
-          DOWN
-        </button> */}
       </div>
     </div>
   );
