@@ -85,11 +85,6 @@ button {
   margin: 10px;
 }
 
-.score {
-  font-size: 14px;
-  font-weight: bold;
-}
-
 .game-over {
   font-size: 16px;
   font-weight: bold;
@@ -103,12 +98,12 @@ button {
 }
 
 .keys-container {
-  visibility: hidden;
   display: flex;
   flex-direction: column;
   align-content: space-between;
   justify-content: center;
   align-items: center;
+  margin-top: 50px;
 }
 
 .keys-container > .key-row {
@@ -138,4 +133,31 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.volume {
+  position: absolute;
+  top: 50px;
+  right: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  font-size: x-large;
+  cursor: pointer;
+}
+
+.score {
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  top: 50px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.head {
+  background-color: #fff;
 }

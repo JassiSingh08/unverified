@@ -1,28 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import gameplayAudio from './assets/gameplay.mp3';
-import pointAudio from './assets/point.mp3';
-import errorAudio from './assets/error.mp3';
 import { Joystick } from "react-joystick-component";
 import GameOver from "./Components/GameOver";
-
-
-const COLs = 48;
-const ROWs = 48;
-const DEFAULT_LENGTH = 10;
-const SPEED = 50
-
-const UP = Symbol("up");
-const DOWN = Symbol("down");
-const RIGHT = Symbol("right");
-const LEFT = Symbol("left");
-
-const gameAudio = new Audio(gameplayAudio);
-const bonusAudio = new Audio(pointAudio);
-const errorplayAudio = new Audio(errorAudio);
+import { bonusAudio, COLS, DOWN, errorPlayAudio, gameAudio, LEFT, RIGHT, ROWS, UP, DEFAULT_LENGTH, SPEED, VolumeMute, VolumeKnob } from "./Constants/constants";
 
 function App() {
   const timer = useRef(null);
-  const grid = useRef(Array(ROWs).fill(Array(COLs).fill("")));
+  const grid = useRef(Array(ROWS).fill(Array(COLS).fill("")));
   const snakeCoordinates = useRef([]);
   const direction = useRef(DOWN);
   const snakeCoordinatesMap = useRef(new Set());
@@ -33,6 +16,31 @@ function App() {
   const [points, setPoints] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPlaying, setPlaying] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [isMuted, setIsMuted] = useState(() => {
+    const savedMuteState = localStorage.getItem('isMuted');
+    return savedMuteState === 'true';
+  });
+
+  useEffect(() => {
+    const savedHighScore = localStorage.getItem("highScore");
+    if (savedHighScore) {
+      setHighScore(parseInt(savedHighScore, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (points > highScore) {
+      setHighScore(points);
+      localStorage.setItem("highScore", points); // Save to local storage
+    }
+  }, [points, highScore]);
+
+  useEffect(() => {
+    gameAudio.muted = isMuted;
+    bonusAudio.muted = isMuted;
+    errorPlayAudio.muted = isMuted;
+  }, [isMuted]);
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => handleDirectionChange(e.key));
@@ -158,8 +166,8 @@ function App() {
 
   const collisionCheck = (snakeHead) => {
     if (
-      snakeHead.col >= COLs ||
-      snakeHead.row >= ROWs ||
+      snakeHead.col >= COLS ||
+      snakeHead.row >= ROWS ||
       snakeHead.col < 0 ||
       snakeHead.row < 0
     ) {
@@ -174,8 +182,8 @@ function App() {
 
 
   const populateFoodBall = async () => {
-    const row = Math.floor(Math.random() * ROWs);
-    const col = Math.floor(Math.random() * COLs);
+    const row = Math.floor(Math.random() * ROWS);
+    const col = Math.floor(Math.random() * COLS);
 
     foodCoords.current = {
       row,
@@ -195,7 +203,7 @@ function App() {
 
   const stopGame = async () => {
     gameAudio.pause();
-    errorplayAudio.play();
+    errorPlayAudio.play();
     setGameOver(true);
     setPlaying(false);
     if (timer.current) {
@@ -231,6 +239,14 @@ function App() {
     [isPlaying]
   );
 
+  const toggleAudio = () => {
+    setIsMuted((prevState) => {
+      const newMutedState = !prevState;
+      localStorage.setItem('isMuted', newMutedState);
+      return newMutedState;
+    });
+  };
+
   const handleJoystickMove = (event) => {
     const { direction } = event;
     // Update direction based on joystick movement
@@ -256,6 +272,13 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="volume" onClick={toggleAudio}>
+        {isMuted ? <VolumeMute /> : <VolumeKnob />}
+      </div>
+      <div className="score">
+        <div>HIGH-SCORE: {highScore}</div>
+        <div >SCORE: {points}</div>
+      </div>
       {gameOver ? (
         <>
           <p className="game-over">GAME OVER</p>
@@ -273,9 +296,8 @@ function App() {
           </div>
         ))}
       </div>
-      <p className="score">SCORE {points}</p>
       <div className="keys-container">
-        <Joystick size={100} move={handleJoystickMove} ></Joystick>
+        <Joystick size={130} move={handleJoystickMove} ></Joystick>
       </div>
     </div>
   );
