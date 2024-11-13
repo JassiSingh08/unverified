@@ -17,6 +17,7 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [isPlaying, setPlaying] = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const [gamepadConnected, setGameOverConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
     const savedMuteState = localStorage.getItem('isMuted');
     return savedMuteState === 'true';
@@ -267,8 +268,53 @@ function App() {
       default:
         break;
     }
-
   };
+
+
+  useEffect(() => {
+    const gamepadHandler = (event) => {
+      setGameOverConnected(true)
+      console.log(`Gamepad ${event.type}:`, event.gamepad);
+    };
+
+    window.addEventListener("gamepadconnected", gamepadHandler);
+    window.addEventListener("gamepaddisconnected", () => { setGameOverConnected(false) });
+
+    // Poll for gamepad input on a timer
+    const pollGamepad = () => {
+      const gamepads = navigator.getGamepads();
+      if (gamepads[0]) {
+        const { buttons } = gamepads[0];
+
+        if (buttons[12]?.pressed) {
+          console.log("D-pad Up pressed");
+          handleDirectionChange("ArrowUp");
+        }
+        if (buttons[13]?.pressed) {
+          console.log("D-pad Down pressed");
+          handleDirectionChange("ArrowDown");
+        }
+        if (buttons[14]?.pressed) {
+          console.log("D-pad Left pressed");
+          handleDirectionChange("ArrowLeft");
+        }
+        if (buttons[15]?.pressed) {
+          console.log("D-pad Right pressed");
+          handleDirectionChange("ArrowRight");
+        }
+      }
+      requestAnimationFrame(pollGamepad);
+    };
+
+
+    pollGamepad();
+
+
+    return () => {
+      window.removeEventListener("gamepadconnected", gamepadHandler);
+      window.removeEventListener("gamepaddisconnected", gamepadHandler);
+    };
+  }, []);
 
   return (
     <div className="app-container">
@@ -285,9 +331,12 @@ function App() {
           <GameOver score={points} />
         </>
       ) : (
-        <button onClick={isPlaying ? stopGame : startGame}>
-          {isPlaying ? "STOP" : "START"} GAME
-        </button>
+        <>
+          {gamepadConnected ? <span>Gamepad Connected</span> : <></>}
+          <button onClick={isPlaying ? stopGame : startGame}>
+            {isPlaying ? "STOP" : "START"} GAME
+          </button>
+        </>
       )}
       <div className="board">
         {grid.current?.map((row, row_idx) => (
