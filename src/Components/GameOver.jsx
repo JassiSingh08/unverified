@@ -2,17 +2,17 @@ import React from "react";
 
 function GameOver({ score }) {
   const handleReload = () => {
-    window.location.reload(); // This will reload the page
+    window.location.reload(); 
   };
 
   return (
-    <div id="GameBoard">
-      <div id="GameOverText">
+    <>
+      <button onClick={handleReload}>Reload</button>
+      <div id="GameOverArea">
+        <p className="game-over">GAME OVER</p>
         <span className="game-over">Your score: {score}</span>
-
-        <button onClick={handleReload}>Reload</button>
       </div>
-    </div>
+    </>
   );
 }
 
